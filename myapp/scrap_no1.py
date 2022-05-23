@@ -8,26 +8,6 @@ from django.db import connections
 import sqlite3
 
 def scraping():
-    #url="https://www.swu.ac.kr/www/noticea.html"
-    # headers={
-    #     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
-    #     "Accept-Language":"ko-KR,ko"}
-    # res=requests.get(url,headers=headers)
-    # res.raise_for_status()
-    # soup = BeautifulSoup(res.content,'html.parser', from_encoding="utf-8")
-    # table=soup.find('table')
-    # # url2=f'https://www.swu.ac.kr/" + {src} + "&currentPage=1'
-    # # res2=requests.get(url2,headers=headers)
-    # # soup2 = BeautifulSoup(res2.content,'html.parser', from_encoding="utf-8")
-    # print(str(table))
-    #executable_path='C:/Users/wjdwl/Downloads/chromedriver.exe'
-    # options=webdriver.ChromeOptions()
-    # options.add_experimental_option("excludeSwitches",["enable-logging"])
-    # driver=webdriver.Chrome(options=options,executable_path="C:/Users/wjdwl/django/chromedriver.exe")
-    # driver.get(url)
-    # driver.implicitly_wait(30)
-    # driver.switch_to.frame("mainFrm")
-    # r=driver.page_source
     url="https://www.swu.ac.kr//front/boardlist.do?bbsConfigFK=4&currentPage=$1"
     headers={
         "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
@@ -49,12 +29,9 @@ def scraping():
             frag_link=str(find_link[3])
             link="http://www.swu.ac.kr/front/boardview.do?&pkid=" + frag_link +"&currentPage=1&menuGubun=1&siteGubun=1&bbsConfigFK=4&searchField=ALL&searchValue=&searchLowItem=ALL"
             contents=contentExtraction(link)
-            updateDB(id,title,contents,link)
-            print(contents)
+            #updateDB(id,title,contents,link)
             break
     
-    # with open("swu.html","w",encoding="utf-8")as f:
-    #     f.write()
 
 def contentExtraction(link):
     headers={
@@ -66,7 +43,7 @@ def contentExtraction(link):
     content_text=soup.find("div",{"class":"contents"}).text
     return(str(content_text))
 
-def updateDB(id,title,contents,link):
+def updateDB(title,contents,link):
     con=sqlite3.connect('./db.sqlite3')
     cur=con.cursor()
     query="INSERT INTO myapp_recent_ann (content,title,dept,link) VALUES(?,?,?,?)"
