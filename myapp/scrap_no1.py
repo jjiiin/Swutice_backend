@@ -29,7 +29,8 @@ def scraping():
             frag_link=str(find_link[3])
             link="http://www.swu.ac.kr/front/boardview.do?&pkid=" + frag_link +"&currentPage=1&menuGubun=1&siteGubun=1&bbsConfigFK=4&searchField=ALL&searchValue=&searchLowItem=ALL"
             contents=contentExtraction(link)
-            #updateDB(id,title,contents,link)
+            #sqlite에 저장된 공지(제목)과 크롤링해온 제목 비교하기
+            #updateDB(title,contents,link)
             break
     
 
@@ -40,7 +41,7 @@ def contentExtraction(link):
     res=requests.get(link,headers=headers)
     res.raise_for_status()
     soup=BeautifulSoup(res.text,'html.parser',from_encoding="utf-8")
-    content_text=soup.find("div",{"class":"contents"}).text
+    content_text=soup.find("div",{"class":"contents"}).text.replace("\n","")
     return(str(content_text))
 
 def updateDB(title,contents,link):
