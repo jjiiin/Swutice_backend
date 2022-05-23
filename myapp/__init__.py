@@ -1,3 +1,4 @@
 from .push_fcm_notification import *
-
-send_to_firebase_cloud_messaging()
+from .scrap_no1 import *
+#send_to_firebase_cloud_messaging()
+scraping()

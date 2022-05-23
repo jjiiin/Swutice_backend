@@ -54,10 +54,10 @@ def scrap(request):
     res=requests.get(url,headers=headers)
     res.raise_for_status()
     soup = BeautifulSoup(res.text, "lxml")
-    with open("swu.html","w",encoding="utf8")as f:
+    with open("swu_noticea.html","w",encoding="utf8")as f:
         f.write(res.text)
-    
-    db.child("name").push({"company":"google0523"})
+    print("scrap_views")
+    db.child("name").push({"company":"google0523_noon"})
     
     
     return HttpResponse('hello myapp!')
