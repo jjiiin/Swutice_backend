@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.db import connections
 import sqlite3
+from .fb_read import*
 
 def scraping():
     url="https://www.swu.ac.kr//front/boardlist.do?bbsConfigFK=4&currentPage=$1"
@@ -17,6 +18,7 @@ def scraping():
     soup=BeautifulSoup(res.text,'html.parser',from_encoding="utf-8")
     tbody=soup.find("tbody")
     announcements=tbody.find_all("tr")
+    keywordList()
     for index, value in enumerate(announcements):
         temp=value.find_all("td")
         temp_index=str(temp[0].text).replace("\n","")
@@ -25,12 +27,16 @@ def scraping():
             #print("top:"+temp[0].text)
             id=str(temp[0].text).replace("\n","")
             title=str(temp[1].text).replace("\n","").replace("새글","")
-            find_link=temp[1].a.attrs["onclick"].split("'")
-            frag_link=str(find_link[3])
-            link="http://www.swu.ac.kr/front/boardview.do?&pkid=" + frag_link +"&currentPage=1&menuGubun=1&siteGubun=1&bbsConfigFK=4&searchField=ALL&searchValue=&searchLowItem=ALL"
-            contents=contentExtraction(link)
             #sqlite에 저장된 공지(제목)과 크롤링해온 제목 비교하기
-            #updateDB(title,contents,link)
+            title_before=titleGetDB()
+            if(title_before!=title):
+                find_link=temp[1].a.attrs["onclick"].split("'")
+                frag_link=str(find_link[3])
+                link="http://www.swu.ac.kr/front/boardview.do?&pkid=" + frag_link +"&currentPage=1&menuGubun=1&siteGubun=1&bbsConfigFK=4&searchField=ALL&searchValue=&searchLowItem=ALL"
+                contents=contentExtraction(link)
+                updateDB(title,contents,link)
+                #fb-keyword목록과 비교하기
+
             break
     
 
@@ -43,6 +49,15 @@ def contentExtraction(link):
     soup=BeautifulSoup(res.text,'html.parser',from_encoding="utf-8")
     content_text=soup.find("div",{"class":"contents"}).text.replace("\n","")
     return(str(content_text))
+
+def titleGetDB():
+    con=sqlite3.connect('./db.sqlite3')
+    cur=con.cursor()
+    query="SELECT title FROM myapp_recent_ann WHERE dept=?"
+    cur.execute(query,"main_1")
+    con.commit()
+    cur.close()
+    con.close()
 
 def updateDB(title,contents,link):
     con=sqlite3.connect('./db.sqlite3')

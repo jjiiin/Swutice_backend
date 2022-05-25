@@ -39,11 +39,11 @@ firebaseConfig = {
     "appId": "1:1063005594107:web:2df2ef2ad8ea33a4ebab5e",
     "measurementId": "G-D3J218FJBZ"
 }
-firebase =pyrebase.initialize_app(firebaseConfig)
+# firebase =pyrebase.initialize_app(firebaseConfig)
 
 
-db=firebase.database()
-auth=firebase.auth()
+# db=firebase.database()
+# auth=firebase.auth()
 
 
 def scrap(request):
@@ -57,7 +57,8 @@ def scrap(request):
     with open("swu_noticea.html","w",encoding="utf8")as f:
         f.write(res.text)
     print("scrap_views")
-    db.child("name").push({"company":"google0523_noon"})
-    
+    # db.child("name").push({"company":"google0525_noon"})
+    # ref=db.reference('keyword')
+    # print(ref.get())
     
     return HttpResponse('hello myapp!')
