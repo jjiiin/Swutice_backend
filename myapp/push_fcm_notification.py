@@ -2,16 +2,16 @@ from firebase_admin import messaging
 import datetime
 
 
-def send_to_firebase_cloud_messaging():
+def send_to_firebase_cloud_messaging(dept,keyword,token_,link_):
     # This registration token comes from the client FCM SDKs.
-    print("yes")
-    registration_token = 'dsYc79uLQnOLdwtRWPi6jO:APA91bH8oLpnWGV1TvwlFG_pTtsjhURFTH481pVU32V6Fmc05InqmLQRaSRECCYJ48b0FE8Y8m7Wsh70-uVXlt6Xpa8K1HpouKRhmfOwqeVrJjZYkj7SfOjN1G5uAx0Wwz1717oTFGUF'#토큰은 users밑에 있음.
+    print(token_)
+    registration_token = token_#토큰은 users밑에 있음.
     uid='Y308tPcnZ5PMjcbXgd48ZbGJ2wl1'
     # See documentation on defining a message payload.
     message = messaging.Message(
     notification=messaging.Notification(
-        title='SWUTICE-학사',
-        body='계절 키워드가 포함된 공지사항이 등록됐습니다.',
+        title=f'SWUTICE-{dept}',
+        body=f'\"{keyword}\"키워드가 포함된 공지사항이 등록됐습니다.',
     ),android=messaging.AndroidConfig( 
         ttl=datetime.timedelta(seconds=3600), 
         priority='normal', 
@@ -23,8 +23,7 @@ def send_to_firebase_cloud_messaging():
                     aps=messaging.Aps(badge=42), ), 
                     ), 
                     data={ 
-                        'URL':'https://www.swu.ac.kr/www/noticea.html', 
-                        'BODY':'message is Body' },
+                        'URL':link_,  },
     token=registration_token,
     )
     

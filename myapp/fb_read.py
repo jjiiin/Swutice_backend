@@ -31,3 +31,10 @@ def keywordList():
     for key, val in keyword.val().items():
         kwList.append(val)
     return kwList
+
+def tokenList(keyword):
+    token=db.child('keyword_subscribe').child(keyword).get()
+    tokenList=[]
+    for key, val in token.val().items():
+        tokenList.append(val)
+    return tokenList
