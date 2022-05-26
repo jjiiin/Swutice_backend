@@ -18,7 +18,11 @@ def scraping():
     soup=BeautifulSoup(res.text,'html.parser',from_encoding="utf-8")
     tbody=soup.find("tbody")
     announcements=tbody.find_all("tr")
-    keywordList()
+    kwList=keywordList()
+    #print(kwList)['계절', '방학']
+    title_before_tmp=titleGetDB()
+    title_before=title_before_tmp[0]
+    print(title_before)
     for index, value in enumerate(announcements):
         temp=value.find_all("td")
         temp_index=str(temp[0].text).replace("\n","")
@@ -29,12 +33,13 @@ def scraping():
             title=str(temp[1].text).replace("\n","").replace("새글","")
             #sqlite에 저장된 공지(제목)과 크롤링해온 제목 비교하기
             title_before=titleGetDB()
-            if(title_before!=title):
-                find_link=temp[1].a.attrs["onclick"].split("'")
-                frag_link=str(find_link[3])
-                link="http://www.swu.ac.kr/front/boardview.do?&pkid=" + frag_link +"&currentPage=1&menuGubun=1&siteGubun=1&bbsConfigFK=4&searchField=ALL&searchValue=&searchLowItem=ALL"
-                contents=contentExtraction(link)
-                updateDB(title,contents,link)
+            print(title)
+            # if(title_before!=title):
+            #     find_link=temp[1].a.attrs["onclick"].split("'")
+            #     frag_link=str(find_link[3])
+            #     link="http://www.swu.ac.kr/front/boardview.do?&pkid=" + frag_link +"&currentPage=1&menuGubun=1&siteGubun=1&bbsConfigFK=4&searchField=ALL&searchValue=&searchLowItem=ALL"
+            #     contents=contentExtraction(link)
+            #     updateDB(title,contents,link)
                 #fb-keyword목록과 비교하기
 
             break
@@ -53,11 +58,13 @@ def contentExtraction(link):
 def titleGetDB():
     con=sqlite3.connect('./db.sqlite3')
     cur=con.cursor()
-    query="SELECT title FROM myapp_recent_ann WHERE dept=?"
-    cur.execute(query,"main_1")
+    dept=("main_1",)
+    cur.execute("SELECT title FROM myapp_recent_ann WHERE dept=?",(dept))
     con.commit()
+    result=cur.fetchone()
     cur.close()
     con.close()
+    return result
 
 def updateDB(title,contents,link):
     con=sqlite3.connect('./db.sqlite3')
