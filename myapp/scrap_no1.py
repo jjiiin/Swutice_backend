@@ -20,7 +20,6 @@ def scraping():
     tbody=soup.find("tbody")
     announcements=tbody.find_all("tr")
     title_before=titleGetDB()[0]
-    #print(kwList)['계절', '방학']
     cnt=0
     count=0
     title_update=""
@@ -41,17 +40,19 @@ def scraping():
                 find_link=temp[1].a.attrs["onclick"].split("'")
                 frag_link=str(find_link[3])
                 link="http://www.swu.ac.kr/front/boardview.do?&pkid=" + frag_link +"&currentPage=1&menuGubun=1&siteGubun=1&bbsConfigFK=4&searchField=ALL&searchValue=&searchLowItem=ALL"
-                contents=contentExtraction(link)
+                contents_tmp=contentExtraction(link)
                 #키워드 리스트랑 비교해서 푸쉬알림 보내기
-                pushNotification(title,link)
-                print(title)
+                content=title+contents_tmp
+                pushNotification(content,link)
                 if(cnt==1):
                     title_update=title
                 #fb-keyword목록과 비교하기
             else: 
-                print("title_update"+title_update)
-                updateDB(title_update)
-                count+=1
+                #공지사항이 update됐을 때만 sqlite 수정하기.
+                if cnt!=0:
+                    print("title_update"+title_update)
+                    updateDB(title_update)
+                    count+=1
                 break
     
 
@@ -62,21 +63,20 @@ def contentExtraction(link):
     res=requests.get(link,headers=headers)
     res.raise_for_status()
     soup=BeautifulSoup(res.text,'html.parser',from_encoding="utf-8")
-    content_text=soup.find("div",{"class":"contents"}).text.replace("\n","")
+    content_text=soup.find("div",{"class":"contents"}).text.replace("\n","").replace(" ","")
     return(str(content_text))
 
-def pushNotification(title,link):
+def pushNotification(content,link):
     kwList=keywordList()#파이어베이스에서 keyword리스트 가져옴
-    print(kwList)
     for i in kwList:
-        if(i in title):
+        if i in content:
             #fb에서 토큰 찾아서 리스트로 만들기
+            print("호출"+i)
             tkList=tokenList(i)
-            print(tkList)
             dept="학사"
-            for j in tkList:
-                print(j)
-                send_to_firebase_cloud_messaging(dept,i,j,link)
+            for key, value in tkList:
+                notificationList(i,link,key,dept)
+                send_to_firebase_cloud_messaging(dept,i,value,link)
 
 
 def titleGetDB():
@@ -93,8 +93,7 @@ def titleGetDB():
 def updateDB(title):
     con=sqlite3.connect('./db.sqlite3')
     cur=con.cursor()
-    dept="main_1"
-    cur.execute("UPDATE myapp_recent_ann SET title=? WHERE dept= ?",(title, dept,))
+    cur.execute("UPDATE myapp_recent_ann SET title = ? WHERE dept = ?",(title,'main_1'))
     con.commit()
     cur.close()
     con.close()

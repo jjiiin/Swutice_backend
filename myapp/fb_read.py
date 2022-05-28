@@ -1,9 +1,11 @@
+from calendar import c
 import pyrebase
 import firebase_admin
 import json
 from firebase_admin import credentials
 from firebase_admin import db
 from collections import OrderedDict
+from datetime import datetime
 
 firebaseConfig = {
     "apiKey": "AIzaSyAjJNUWcRdpfeuiytIB_22ZjFXn_ydoHqw",
@@ -35,6 +37,15 @@ def keywordList():
 def tokenList(keyword):
     token=db.child('keyword_subscribe').child(keyword).get()
     tokenList=[]
+    print(token.val().items())
     for key, val in token.val().items():
         tokenList.append(val)
-    return tokenList
+    return token.val().items()
+
+
+def notificationList(keyword, link, uid, dept):
+    body=f'\"{keyword}\"키워드가 포함된 공지사항이 등록됐습니다.'
+    current_time = datetime.now()
+    date={'year':current_time.year, 'month': current_time.month, 'day':current_time.day, 'hour':current_time.hour, 'minute':current_time.minute, 'second':current_time.second,}
+    db.child('users').child(uid).child(
+        'notification').push({'dept':dept, 'body':body, 'date':date, 'link':link,})
