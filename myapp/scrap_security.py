@@ -1,9 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
-import sqlite3
 from .fb_read import*
 from .push_fcm_notification import *
+from .db_crud import*
 
+dept='security'
+dept_kr='정보보호학과'
+deptNum=24
 def scraping_security():
     url="http://security.swu.ac.kr/sub.html?page=department_notice&page1=1&searchKey=&searchValue="
     headers={
@@ -18,7 +21,7 @@ def scraping_security():
     #     title_before=titleGetDB()[0]
     # else:
     #     title_before=""
-    title_before=titleGetDB()[0].replace(" ","")
+    title_before=titleGetDB(dept)[0].replace(" ","")
     cnt=0
     count=0
     title_update=""
@@ -26,7 +29,7 @@ def scraping_security():
         temp=value.find_all("td")
         temp_index=str(temp[0].text).replace("\n","")
         if count == 1:
-            title_before=titleGetDB()[0].replace(" ","")
+            title_before=titleGetDB(dept)[0].replace(" ","")
         if temp_index not in "공지":
             title_=str(temp[1].text).replace("\n","").replace("새글","").replace(" ","")
             title=str(temp[1].text).replace("\n","").replace("새글","")
@@ -41,7 +44,7 @@ def scraping_security():
                 contents=contentExtraction(link)
                 #키워드 리스트랑 비교해서 푸쉬알림 보내기
                 content=title+contents
-                #pushNotification(content,link)
+                pushNotification(content,link,dept_kr,deptNum)
                 if cnt==1:
                     title_update=title
                     print("title_update_cnt"+title_update)
@@ -52,7 +55,7 @@ def scraping_security():
                 #공지사항이 update됐을 때만 sqlite 수정하기.
                 if cnt!=0:
                     print("title_update"+title_update)
-                    updateDB(title_update)
+                    updateDB(title_update,dept)
                     count+=1
                 break
     
@@ -67,47 +70,3 @@ def contentExtraction(link):
     content_text=soup.find("div",{"class":"boardview-content"}).text.replace("\n","")
     return(str(content_text))
 
-def pushNotification(content,link):
-    kwList=keywordList()#파이어베이스에서 keyword리스트 가져옴
-    print(kwList)
-    for i in kwList:
-        if(i in content):
-            #fb에서 토큰 찾아서 리스트로 만들기
-            tkList=tokenList(i)
-            print(tkList)
-            dept="정보보호학과"
-            deptNum=24
-            for key, value in tkList:
-                #key(=uid)를 검사해서 해당 학과를 구독했는지 알아봐야함.
-                if deptSubscribe(key,deptNum)==True:
-                    notificationList(i,link,key,dept)
-                    send_to_firebase_cloud_messaging(dept,i,value,link)
-
-
-def titleGetDB():
-    con=sqlite3.connect('./db.sqlite3')
-    cur=con.cursor()
-    dept=("security",)
-    cur.execute("SELECT title FROM myapp_recent_ann WHERE dept=?",(dept))
-    con.commit()
-    result=cur.fetchone()
-    cur.close()
-    con.close()
-    return result
-
-def insertDB(title,contents,link):
-    con=sqlite3.connect('./db.sqlite3')
-    cur=con.cursor()
-    query="INSERT INTO myapp_recent_ann(dept, title, content, link) VALUES(?,?,?,?)"
-    cur.execute(query,('security',title,contents,link))
-    con.commit()
-    cur.close()
-    con.close()
-
-def updateDB(title):
-    con=sqlite3.connect('./db.sqlite3')
-    cur=con.cursor()
-    cur.execute("UPDATE myapp_recent_ann SET title = ? WHERE dept = ?",(title,'security'))
-    con.commit()
-    cur.close()
-    con.close()

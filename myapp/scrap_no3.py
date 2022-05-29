@@ -1,14 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
-from django.db import connections
 from .fb_read import*
 from .push_fcm_notification import *
 from .db_crud import*
 
-dept='main_1'
-dept_kr='학사'
-def scraping_no1():
-    url="https://www.swu.ac.kr//front/boardlist.do?bbsConfigFK=4&currentPage=$1"
+#행사
+dept='main_3'
+dept_kr='행사'
+def scraping_no3():
+    url="https://www.swu.ac.kr//front/boardlist.do?bbsConfigFK=6&currentPage=$1"
     headers={
         "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
         "Accept-Language":"ko-KR,ko"}
@@ -18,6 +18,7 @@ def scraping_no1():
     tbody=soup.find("tbody")
     announcements=tbody.find_all("tr")
     title_before=titleGetDB(dept)[0]
+    # title_before=""
     cnt=0
     count=0
     title_update=""
@@ -26,13 +27,13 @@ def scraping_no1():
         temp_index=str(temp[0].text).replace("\n","")
         #print(temp_index)
         if count == 1:
+            print("count")
             title_before=titleGetDB(dept)[0]
         if temp_index not in "TOP":
-            #print("top:"+temp[0].text)
-            id=str(temp[0].text).replace("\n","")
             title=str(temp[1].text).replace("\n","").replace("새글","")
             #sqlite에 저장된 공지(제목)과 크롤링해온 제목 비교하기
-            print("title_before"+title_before)
+            print("title_before "+title_before)
+            print("title "+title)
             if(title_before!=title):
                 cnt+=1
                 find_link=temp[1].a.attrs["onclick"].split("'")
@@ -44,6 +45,9 @@ def scraping_no1():
                 pushNotification(content,link,dept_kr,0)
                 if(cnt==1):
                     title_update=title
+                    # if title_before=="":
+                    #     insertDB(title_update,content,link,dept)
+                    #     break
                 #fb-keyword목록과 비교하기
             else: 
                 #공지사항이 update됐을 때만 sqlite 수정하기.
@@ -63,20 +67,3 @@ def contentExtraction(link):
     soup=BeautifulSoup(res.text,'html.parser',from_encoding="utf-8")
     content_text=soup.find("div",{"class":"contents"}).text.replace("\n","").replace(" ","")
     return(str(content_text))
-
-def pushNotification(content,link,dept,deptNum):
-    print("push")
-    kwList=keywordList()#파이어베이스에서 keyword리스트 가져옴
-    for i in kwList:
-        if(i in content):
-            #fb에서 토큰 찾아서 리스트로 만들기
-            tkList=tokenList(i)
-            for key, value in tkList:
-                #key(=uid)를 검사해서 해당 학과를 구독했는지 알아봐야함.
-                if deptNum !=0:   
-                    if deptSubscribe(key,deptNum)==True:
-                        notificationList(i,link,key,dept)
-                        send_to_firebase_cloud_messaging(dept,i,value,link)
-                else:
-                    notificationList(i,link,key,dept)
-                    send_to_firebase_cloud_messaging(dept,i,value,link)
