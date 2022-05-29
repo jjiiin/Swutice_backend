@@ -49,3 +49,13 @@ def notificationList(keyword, link, uid, dept):
     date={'year':current_time.year, 'month': current_time.month, 'day':current_time.day, 'hour':current_time.hour, 'minute':current_time.minute, 'second':current_time.second,}
     db.child('users').child(uid).child(
         'notification').push({'dept':dept, 'body':body, 'date':date, 'link':link,})
+
+def deptSubscribe(uid, deptNum):
+    for i in range(1,4):
+        major_="major"+str(i)
+        sub_major=db.child('users').child(uid).child(major_).get()
+        if sub_major.val()==deptNum:
+            return True
+    else:
+        return False
+
