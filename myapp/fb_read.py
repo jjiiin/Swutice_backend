@@ -1,10 +1,6 @@
-from calendar import c
 import pyrebase
-import firebase_admin
-import json
 from firebase_admin import credentials
 from firebase_admin import db
-from collections import OrderedDict
 from datetime import datetime
 
 firebaseConfig = {
@@ -29,7 +25,6 @@ auth=firebase.auth()
 def keywordList():
     keyword=db.child('keyword').get()
     kwList=[]
-    #print(keyword.val())#OrderedDict([('-N2e-1UHxGapWtFUs_0i', '계절'), ('-N2e-7i8dWKJYDqaberz', '방학')])
     for key, val in keyword.val().items():
         kwList.append(val)
     return kwList

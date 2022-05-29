@@ -1,9 +1,5 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 import requests
 from bs4 import BeautifulSoup
-from django.db import connections
 import sqlite3
 from .fb_read import*
 from .push_fcm_notification import *
@@ -32,7 +28,6 @@ def scraping_security():
         if count == 1:
             title_before=titleGetDB()[0].replace(" ","")
         if temp_index not in "공지":
-            #print("top:"+temp[0].text)
             title_=str(temp[1].text).replace("\n","").replace("새글","").replace(" ","")
             title=str(temp[1].text).replace("\n","").replace("새글","")
             print("title_crawli"+title_)
@@ -47,7 +42,6 @@ def scraping_security():
                 #키워드 리스트랑 비교해서 푸쉬알림 보내기
                 content=title+contents
                 #pushNotification(content,link)
-                #print("content"+content)
                 if cnt==1:
                     title_update=title
                     print("title_update_cnt"+title_update)
@@ -85,8 +79,7 @@ def pushNotification(content,link):
             deptNum=24
             for key, value in tkList:
                 #key(=uid)를 검사해서 해당 학과를 구독했는지 알아봐야함.
-                check= deptSubscribe(key,deptNum)
-                if check==True:
+                if deptSubscribe(key,deptNum)==True:
                     notificationList(i,link,key,dept)
                     send_to_firebase_cloud_messaging(dept,i,value,link)
 
