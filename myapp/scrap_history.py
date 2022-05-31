@@ -20,8 +20,8 @@ def scraping_history():
     # if titleGetDB()!="":
     #     title_before=titleGetDB()[0]
     # else:
-    title_before=""
-    #title_before=titleGetDB(dept)[0].replace(" ","")
+    #title_before=""
+    title_before=titleGetDB(dept)[0].replace(" ","")
     cnt=0
     count=0
     title_update=""
