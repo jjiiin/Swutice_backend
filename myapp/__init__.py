@@ -6,9 +6,14 @@ from .scrap_no5 import *
 from .scrap_security import *
 from .scrap_korean import *
 from .scrap_biz import *
-from .scrap_digitalMedia import*
-from .scrap_libraryInfo import*
-from .scrap_socialWelfare import*
+from .scrap_digitalMedia import *
+from .scrap_libraryInfo import *
+from .scrap_socialWelfare import *
+from .scrap_software import *
+from .scrap_japanese import *
+from .scrap_german import *
+from .scrap_history import *
+
 #학교
 #scraping_no1()#학사
 #scraping_no2()#장학
@@ -22,4 +27,8 @@ from .scrap_socialWelfare import*
 #scraping_biz()#경영학과
 #scraping_dm()#디지털미디어학과
 #scraping_libraryInfo()#문헌정보학과
-scraping_socialWelfare()
+#scraping_socialWelfare()#사회복지학과
+#scraping_software()#소프트웨어융합학과
+#scraping_japanese()#일어일문학과
+#scraping_germany()#독어독문학과
+scraping_history()#사학과

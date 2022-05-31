@@ -41,7 +41,7 @@ def tokenList(keyword):
 def notificationList(keyword, link, uid, dept):
     print("notilist")
     current_time = time.localtime()
-    body=f'\"{keyword}\"키워드가 포함된 공지사항이 등록됐습니다.'
+    body=f'\"{keyword}\" 키워드가 포함된 공지사항이 등록됐습니다.'
     date={'year':int(current_time.tm_year), 'month': int(current_time.tm_mon), 'day':int(current_time.tm_mday), 'hour':int(current_time.tm_hour), 'minute':int(current_time.tm_min), 'second':int(current_time.tm_sec),}
     db.child('users').child(uid).child(
         'notification').push({'dept':dept, 'body':body, 'date':date, 'link':link,})
@@ -58,7 +58,7 @@ def deptSubscribe(uid, deptNum):
 
 
 def pushNotification(content,link,dept,deptNum):
-    print("push")
+    print("push!!!!!\n")
     kwList=keywordList()#파이어베이스에서 keyword리스트 가져옴
     for i in kwList:
         if(i in content):
@@ -70,6 +70,7 @@ def pushNotification(content,link,dept,deptNum):
                     if deptSubscribe(key,deptNum)==True:
                         notificationList(i,link,key,dept)
                         send_to_firebase_cloud_messaging(dept,i,value,link)
+                
                 else:
                     #학교 공지사항
                     notificationList(i,link,key,dept)
