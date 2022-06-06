@@ -1,7 +1,8 @@
 from django.apps import AppConfig
-import crypto
 import sys
-sys.modules['Crypto']=crypto
+# import crypto
+# sys.modules['Crypto']=crypto
+#from crypto.Cipher import AES
 
 class MyappConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
