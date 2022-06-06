@@ -31,4 +31,4 @@ from .scrap_history import *
 #scraping_software()#소프트웨어융합학과
 #scraping_japanese()#일어일문학과
 #scraping_germany()#독어독문학과
-scraping_history()#사학과
+#scraping_history()#사학과
