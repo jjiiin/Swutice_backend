@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-import Crypto
+import crypto
 import sys
 sys.modules['Crypto']=crypto
 
