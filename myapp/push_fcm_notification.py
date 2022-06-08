@@ -4,8 +4,7 @@ import datetime
 
 def send_to_firebase_cloud_messaging(dept,keyword,token_,link_):
     # This registration token comes from the client FCM SDKs.
-    registration_token = token_#토큰은 users밑에 있음.
-    uid='Y308tPcnZ5PMjcbXgd48ZbGJ2wl1'
+    registration_token = token_
     # See documentation on defining a message payload.
     message = messaging.Message(
     notification=messaging.Notification(
