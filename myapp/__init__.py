@@ -17,25 +17,6 @@ import schedule
 import time
 
 
-#학교
-#scraping_no1()#학사
-#scraping_no2()#장학
-#scraping_no3()#행사
-#scraping_no4()#채용/취업
-#scraping_no5()#일반/봉사
-
-#학과
-#scraping_security()#정보보호학과
-#scraping_korean()#국어국문학과
-#scraping_biz()#경영학과
-#scraping_dm()#디지털미디어학과
-#scraping_libraryInfo()#문헌정보학과
-#scraping_socialWelfare()#사회복지학과
-#scraping_software()#소프트웨어융합학과
-#scraping_japanese()#일어일문학과
-#scraping_germany()#독어독문학과
-#scraping_history()#사학과
-
 def keyword_scraping():
     #학교
     scraping_no1()#학사 #키워드 알림을 위해 그 전 공지사항으로 제목 맞추기
