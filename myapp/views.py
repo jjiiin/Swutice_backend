@@ -86,6 +86,7 @@ def job():
     print("do")
     schedule.run_pending()
     time.sleep(1)
+    print("done")
 def scrap(request):
     # url="https://www.swu.ac.kr/www/noticea.html"
     # headers={
