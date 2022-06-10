@@ -13,6 +13,7 @@ from .scrap_software import *
 from .scrap_japanese import *
 from .scrap_german import *
 from .scrap_history import *
+from .push_fcm_notification import send_to_firebase_cloud_messaging_test
 import schedule
 import time
 
@@ -40,7 +41,7 @@ def keyword_scraping():
     
 
 schedule.every(3).minutes.do(keyword_scraping)
-
+schedule.every(1).hours.do(send_to_firebase_cloud_messaging_test)
 while True:
     schedule.run_pending()
     time.sleep(1)
