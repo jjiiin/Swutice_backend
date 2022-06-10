@@ -45,3 +45,5 @@
 # while True:
 #     schedule.run_pending()
 #     time.sleep(1)s
+
+default_app_config='myapp.broker.MyAppConfig'
