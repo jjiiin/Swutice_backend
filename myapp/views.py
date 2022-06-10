@@ -97,8 +97,7 @@ def scrap(request):
     # with open("swu_noticea.html","w",encoding="utf8")as f:
     #     f.write(res.text)
     schedule.run_pending()
-    while True:
-        return HttpResponse('hello myapp!0610')
+    return HttpResponse('hello myapp!0610')
     # db.child("name").push({"company":"google0525_noon"})
     # ref=db.reference('keyword')
     # print(ref.get())
