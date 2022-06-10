@@ -84,7 +84,7 @@ schedule.every(3).seconds.do(keyword_scraping)
 
 def job():
     print("do")
-    
+    schedule.run_pending()
     print("done")
 def scrap(request):
     # url="https://www.swu.ac.kr/www/noticea.html"
@@ -96,7 +96,6 @@ def scrap(request):
     # soup = BeautifulSoup(res.text, "lxml")
     # with open("swu_noticea.html","w",encoding="utf8")as f:
     #     f.write(res.text)
-    schedule.run_pending()
     return HttpResponse('hello myapp!0610')
     # db.child("name").push({"company":"google0525_noon"})
     # ref=db.reference('keyword')
