@@ -20,7 +20,7 @@ import time
 
 def keyword_scraping():
     #학교
-    scraping_no1()#학사 #키워드 알림을 위해 그 전 공지사항으로 제목 맞추기
+    scraping_no1()#학사 
     scraping_no2()#장학
     scraping_no3()#행사
     scraping_no4()#채용/취업
@@ -40,7 +40,7 @@ def keyword_scraping():
     # scraping_germany()#독어독문학과
     
 
-schedule.every(3).minutes.do(keyword_scraping)
+schedule.every(3).seconds.do(keyword_scraping)
 #schedule.every(1).hours.do(send_to_firebase_cloud_messaging_test)
 while True:
     schedule.run_pending()
