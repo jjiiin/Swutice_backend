@@ -80,7 +80,7 @@ def keyword_scraping():
     scraping_biz()#경영학과
 
 schedule.every(3).seconds.do(keyword_scraping)
-schedule.every(1).hours.do(send_to_firebase_cloud_messaging_test)
+#schedule.every(1).hours.do(send_to_firebase_cloud_messaging_test)
 
 def job():
     print("do")
