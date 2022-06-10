@@ -61,4 +61,4 @@ def scrap(request):
     # ref=db.reference('keyword')
     # print(ref.get())
     
-    return HttpResponse('hello myapp!')
+    return HttpResponse('hello myapp!0610')
