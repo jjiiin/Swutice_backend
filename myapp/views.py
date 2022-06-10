@@ -82,10 +82,7 @@ def keyword_scraping():
 schedule.every(3).seconds.do(keyword_scraping)
 #schedule.every(1).hours.do(send_to_firebase_cloud_messaging_test)
 
-def job():
-    print("do")
-    
-    print("done")
+
 def scrap(request):
     # url="https://www.swu.ac.kr/www/noticea.html"
     # headers={
