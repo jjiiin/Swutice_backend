@@ -82,7 +82,10 @@ def keyword_scraping():
 schedule.every(3).seconds.do(keyword_scraping)
 #schedule.every(1).hours.do(send_to_firebase_cloud_messaging_test)
 
-
+def job():
+    print("do")
+    schedule.run_pending()
+    job()
 def scrap(request):
     # url="https://www.swu.ac.kr/www/noticea.html"
     # headers={
@@ -93,8 +96,9 @@ def scrap(request):
     # soup = BeautifulSoup(res.text, "lxml")
     # with open("swu_noticea.html","w",encoding="utf8")as f:
     #     f.write(res.text)
-    schedule.run_pending()
-    return redirect(request.META['HTTP_REFERER'])
+    while True :
+        job()
+        return HttpResponse('hello myapp!0610')
     # db.child("name").push({"company":"google0525_noon"})
     # ref=db.reference('keyword')
     # print(ref.get())
