@@ -98,7 +98,6 @@ def scrap(request):
     #     f.write(res.text)
     schedule.run_pending()
     while True:
-        job()
         return HttpResponse('hello myapp!0610')
     # db.child("name").push({"company":"google0525_noon"})
     # ref=db.reference('keyword')
